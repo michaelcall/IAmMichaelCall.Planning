@@ -12,7 +12,8 @@
 
 ### Clients & Leads
 
-- [ ] **Follow-up:** Address any open items or outstanding tasks from Tuesday.
+- [x] **Follow-up:** Address any open items or outstanding tasks from Tuesday.
+- [x] Update hubspot and reach out to leads
 
 ---
 
