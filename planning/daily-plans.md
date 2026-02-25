@@ -4,7 +4,7 @@
 
 ### Course Work (30 mins)
 
-- [ ] **Terminal & Bash:** Continue learning bash scripting, shell commands, and terminal workflows.
+- [x] **Terminal & Bash:** Continue learning bash scripting, shell commands, and terminal workflows.
 - [ ] **MCP Servers:** Research how Model Context Protocol (MCP) servers work and how they connect to your tools (Claude, n8n, Supabase).
 - [ ] **Saved Courses Review:** Review saved Udemy and Schwarzmüller courses and select the next module.
 
