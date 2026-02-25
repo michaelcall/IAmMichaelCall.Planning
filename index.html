@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Plans</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      font-size: 0.875rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .day-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .day-card:hover {
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .day-header {
+      background: linear-gradient(135deg, #0f3460, #1a1a2e);
+      color: #fff;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .day-date {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .day-title {
+      font-size: 0.95rem;
+      opacity: 0.75;
+      font-weight: 400;
+    }
+
+    .day-progress {
+      margin-left: auto;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .day-body {
+      padding: 0.5rem 0;
+    }
+
+    .category {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #f0f2f5;
+    }
+
+    .category:last-child {
+      border-bottom: none;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .category-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #0f3460;
+      background: #e8edf5;
+      padding: 0.2rem 0.7rem;
+      border-radius: 4px;
+    }
+
+    .category-count {
+      font-size: 0.7rem;
+      color: #888;
+    }
+
+    .task-list {
+      list-style: none;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-radius: 6px;
+      transition: background 0.15s ease;
+    }
+
+    .task-item:hover {
+      background: #f8f9fb;
+      margin: 0 -0.5rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .task-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      border: 2px solid #cbd5e0;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 2px;
+      position: relative;
+      transition: all 0.2s ease;
+      background: #fff;
+    }
+
+    .task-checkbox:hover {
+      border-color: #0f3460;
+    }
+
+    .task-checkbox:checked {
+      background: #0f3460;
+      border-color: #0f3460;
+    }
+
+    .task-checkbox:checked::after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 5px;
+      height: 10px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .task-text {
+      flex: 1;
+      font-size: 0.925rem;
+      color: #333;
+      transition: all 0.2s ease;
+    }
+
+    .task-text strong {
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    .task-item.completed .task-text {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    .task-item.completed .task-text strong {
+      color: #aaa;
+    }
+
+    .sub-tasks {
+      list-style: none;
+      margin-left: 2.75rem;
+      padding-left: 0.75rem;
+      border-left: 2px solid #e8edf5;
+    }
+
+    .sub-tasks .task-item {
+      padding: 0.35rem 0;
+    }
+
+    .sub-tasks .task-text {
+      font-size: 0.875rem;
+    }
+
+    .no-plans {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #888;
+    }
+
+    .no-plans p {
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 1.25rem 1rem;
+      }
+
+      header h1 {
+        font-size: 1.35rem;
+      }
+
+      main {
+        padding: 1rem 0.75rem 2rem;
+      }
+
+      .day-header {
+        padding: 1rem 1.25rem;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .day-progress {
+        margin-left: 0;
+      }
+
+      .category {
+        padding: 0.75rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Daily Plans</h1>
+    <p>Utah Website Pros</p>
+  </header>
+  <main id="app"></main>
+
+  <script>
+    // --- Markdown source for daily plans ---
+    // Add new days by pasting additional markdown blocks below.
+    // The parser expects the format used in planning/daily-plans.md.
+    const markdownSource = `
+## 2026-02-25 | Daily Plan: Utah Website Pros
+
+---
+
+### Course Work (30 mins)
+
+- [x] **Terminal & Bash:** Continue learning bash scripting, shell commands, and terminal workflows.
+- [ ] **MCP Servers:** Research how Model Context Protocol (MCP) servers work and how they connect to your tools (Claude, n8n, Supabase).
+- [ ] **Saved Courses Review:** Review saved Udemy and Schwarzmüller courses and select the next module.
+
+---
+
+### Clients & Leads
+
+- [x] **Follow-up:** Address any open items or outstanding tasks from Tuesday.
+- [x] Update hubspot and reach out to leads
+
+---
+
+### Prospecting
+
+- [ ] **10 Business Calls:** Target the Health, Therapy, and Weight Loss sectors.
+- [ ] **Claude Prospecting List:** Use AI to build a targeted list for a specific local area or industry (e.g., home trades).
+- [ ] **Workshop Planning:** Finalize venue details and event structure for the local business tech workshop.
+- [ ] **Social Posting & Social Attach:** Coordinate posts with Ammon, BNI members, and influencers.
+- [ ] **Local Legend Directory — Member Spotlight:** Refine the value ladder and benefits for local business members.
+
+---
+
+### TODO
+
+- [ ] **Google Business Profile Video:** Record a walkthrough of how to set up a Google Business Profile.
+- [ ] **Automated Reviews Video:** Demo how to automate Google Business reviews using GoHighLevel.
+
+---
+
+### Dev
+
+- [ ] **Claude Skills Research:** Watch YouTube videos and review materials to improve the creation of Claude skills.
+- [ ] **Local Dev Support:** Assist Rob in getting the local development environment running for site testing.
+- [ ] **Customer Workflow:** Automate the process of adding new URLs to the customer tracking sheet.
+- [ ] **Reports & Schema:** Research schema planning and PDF generation for client reports.
+- [ ] **Local Business Directory:** Continue building the directory using Svelte and Supabase.
+- [ ] **Utah Website Pros Site Updates:**
+    - [ ] Add CTAs (Calendar link, Free PDF, Brand-fit quiz).
+    - [ ] Perform SEO optimization.
+    - [ ] Integrate new products with the CRM.
+    - [ ] Look at linking the profile to the website and use the SEO strategy to add services to the Google profile.
+`;
+
+    // --- Parser ---
+    function parsePlans(md) {
+      const days = [];
+      const dayBlocks = md.split(/^## /gm).filter(b => b.trim());
+
+      for (const block of dayBlocks) {
+        const lines = block.split('\n');
+        const headerLine = lines[0].trim();
+
+        // Parse date and optional title from "2026-02-25 | Daily Plan: Utah Website Pros"
+        const headerMatch = headerLine.match(/^(\d{4}-\d{2}-\d{2})\s*(?:\|\s*(.*))?$/);
+        if (!headerMatch) continue;
+
+        const dateStr = headerMatch[1];
+        const title = headerMatch[2] ? headerMatch[2].trim() : '';
+
+        const categories = [];
+        let currentCategory = null;
+        let lastTask = null;
+
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i];
+
+          // Category header: ### Category Name
+          const catMatch = line.match(/^###\s+(.+)/);
+          if (catMatch) {
+            currentCategory = { name: catMatch[1].trim(), tasks: [] };
+            categories.push(currentCategory);
+            lastTask = null;
+            continue;
+          }
+
+          if (!currentCategory) continue;
+
+          // Top-level task: - [x] or - [ ]
+          const taskMatch = line.match(/^- \[([ xX])\]\s+(.+)/);
+          if (taskMatch) {
+            lastTask = {
+              checked: taskMatch[1].toLowerCase() === 'x',
+              text: taskMatch[2].trim(),
+              subtasks: []
+            };
+            currentCategory.tasks.push(lastTask);
+            continue;
+          }
+
+          // Sub-task:     - [x] or     - [ ]
+          const subMatch = line.match(/^\s{2,}- \[([ xX])\]\s+(.+)/);
+          if (subMatch && lastTask) {
+            lastTask.subtasks.push({
+              checked: subMatch[1].toLowerCase() === 'x',
+              text: subMatch[2].trim()
+            });
+          }
+        }
+
+        days.push({ date: dateStr, title, categories });
+      }
+
+      // Sort most recent first
+      days.sort((a, b) => b.date.localeCompare(a.date));
+      return days;
+    }
+
+    // --- Render helpers ---
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    function countTasks(categories) {
+      let total = 0;
+      let done = 0;
+      for (const cat of categories) {
+        for (const task of cat.tasks) {
+          total++;
+          if (task.checked) done++;
+          for (const sub of task.subtasks) {
+            total++;
+            if (sub.checked) done++;
+          }
+        }
+      }
+      return { total, done };
+    }
+
+    function renderTaskText(raw) {
+      // Convert **bold** to <strong>
+      return raw.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    }
+
+    function createTaskItem(task, dayIdx, catIdx, taskIdx, subIdx) {
+      const li = document.createElement('li');
+      li.className = 'task-item' + (task.checked ? ' completed' : '');
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.className = 'task-checkbox';
+      cb.checked = task.checked;
+      cb.setAttribute('aria-label', task.text.replace(/\*\*/g, ''));
+
+      const storageKey = `plan-${dayIdx}-${catIdx}-${taskIdx}` + (subIdx !== undefined ? `-${subIdx}` : '');
+
+      // Restore from localStorage
+      const saved = localStorage.getItem(storageKey);
+      if (saved !== null) {
+        const isChecked = saved === '1';
+        cb.checked = isChecked;
+        li.className = 'task-item' + (isChecked ? ' completed' : '');
+      }
+
+      cb.addEventListener('change', () => {
+        li.classList.toggle('completed', cb.checked);
+        localStorage.setItem(storageKey, cb.checked ? '1' : '0');
+        updateProgress();
+      });
+
+      const span = document.createElement('span');
+      span.className = 'task-text';
+      span.innerHTML = renderTaskText(task.text);
+
+      li.appendChild(cb);
+      li.appendChild(span);
+      return li;
+    }
+
+    // --- Main render ---
+    const plans = parsePlans(markdownSource);
+    const app = document.getElementById('app');
+
+    if (plans.length === 0) {
+      app.innerHTML = '<div class="no-plans"><p>No daily plans found.</p></div>';
+    }
+
+    const progressElements = [];
+
+    plans.forEach((day, dayIdx) => {
+      const card = document.createElement('div');
+      card.className = 'day-card';
+
+      // Header
+      const hdr = document.createElement('div');
+      hdr.className = 'day-header';
+
+      const dateEl = document.createElement('span');
+      dateEl.className = 'day-date';
+      dateEl.textContent = formatDate(day.date);
+
+      hdr.appendChild(dateEl);
+
+      if (day.title) {
+        const titleEl = document.createElement('span');
+        titleEl.className = 'day-title';
+        titleEl.textContent = day.title;
+        hdr.appendChild(titleEl);
+      }
+
+      const progressEl = document.createElement('span');
+      progressEl.className = 'day-progress';
+      progressEl.dataset.dayIdx = dayIdx;
+      hdr.appendChild(progressEl);
+      progressElements.push(progressEl);
+
+      card.appendChild(hdr);
+
+      // Body
+      const body = document.createElement('div');
+      body.className = 'day-body';
+
+      day.categories.forEach((cat, catIdx) => {
+        const section = document.createElement('div');
+        section.className = 'category';
+
+        const catHeader = document.createElement('div');
+        catHeader.className = 'category-header';
+
+        const label = document.createElement('span');
+        label.className = 'category-label';
+        label.textContent = cat.name;
+
+        const count = document.createElement('span');
+        count.className = 'category-count';
+        count.textContent = `${cat.tasks.length} task${cat.tasks.length !== 1 ? 's' : ''}`;
+
+        catHeader.appendChild(label);
+        catHeader.appendChild(count);
+        section.appendChild(catHeader);
+
+        const ul = document.createElement('ul');
+        ul.className = 'task-list';
+
+        cat.tasks.forEach((task, taskIdx) => {
+          const li = createTaskItem(task, dayIdx, catIdx, taskIdx);
+          ul.appendChild(li);
+
+          if (task.subtasks.length > 0) {
+            const subUl = document.createElement('ul');
+            subUl.className = 'sub-tasks';
+            task.subtasks.forEach((sub, subIdx) => {
+              subUl.appendChild(createTaskItem(sub, dayIdx, catIdx, taskIdx, subIdx));
+            });
+            ul.appendChild(subUl);
+          }
+        });
+
+        section.appendChild(ul);
+        body.appendChild(section);
+      });
+
+      card.appendChild(body);
+      app.appendChild(card);
+    });
+
+    // --- Progress tracking ---
+    function updateProgress() {
+      progressElements.forEach(el => {
+        const dayIdx = parseInt(el.dataset.dayIdx);
+        const card = el.closest('.day-card');
+        const checkboxes = card.querySelectorAll('.task-checkbox');
+        let total = checkboxes.length;
+        let done = 0;
+        checkboxes.forEach(cb => { if (cb.checked) done++; });
+        el.textContent = `${done} / ${total} done`;
+      });
+    }
+
+    updateProgress();
+  </script>
+</body>
+</html>
