@@ -45,3 +45,4 @@
     - [ ] Add CTAs (Calendar link, Free PDF, Brand-fit quiz).
     - [ ] Perform SEO optimization.
     - [ ] Integrate new products with the CRM.
+    - [ ] look at linking the profile to the website and use the SEO stratedgy to add services to the google profile
